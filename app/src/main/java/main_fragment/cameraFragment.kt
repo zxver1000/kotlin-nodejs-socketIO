@@ -23,6 +23,29 @@ class cameraFragment : Fragment() {
         mSocket.emit("connectReceive", "hihi")
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+
+        binding= FragmentCameraBinding.inflate(layoutInflater,container,false)
+        try {
+
+            mSocket = IO.socket("http://192.168.56.1:8080")
+            mSocket.connect()
+            print ("연결")
+            Log.d("Connected", "OK12")
+
+        } catch (e: URISyntaxException) {
+            Log.d("ERR", e.toString())
+        }
+        mSocket.on(Socket.EVENT_CONNECT, onConnect)
+        init()
+        return binding!!.root
+    }
+
+
     fun init(){
         binding.sendbutton.setOnClickListener{
             var msg=binding.edittext.text.toString()
@@ -33,25 +56,6 @@ class cameraFragment : Fragment() {
             mSocket.emit("connectReceive",s1)
 
         }
-    }
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding= FragmentCameraBinding.inflate(layoutInflater,container,false)
-        try {
-            mSocket = IO.socket("http://192.168.56.1:8080")
-            mSocket.connect()
-            print ("연걸")
-            Log.d("Connected", "OK12")
-
-        } catch (e: URISyntaxException) {
-            Log.d("ERR", e.toString())
-        }
-        mSocket.on(Socket.EVENT_CONNECT, onConnect)
-        init()
-        return binding!!.root
     }
 
 }
